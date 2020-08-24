@@ -7,8 +7,8 @@ import controlP5.*;
 String myArmPort="COM3";
 
 
-int sizeW = 750; // Screen size
-int sizeH = 750;
+int sizeW = 1500  ; // Screen size
+int sizeH = 1500;
 Float ArmSpan=150.0; // Range of the arm move 
 int FSpeed=5000;
 int delay_time=500; 
@@ -136,12 +136,12 @@ void draw() {
     fill(255);
     if (PointData.size()==1&&DrawFlag==0) {  
       textAlign(CENTER);
-      text("Calibrate the Arm First.", width/2, height/2); 
-      text("a <-  x  -> d   ", width/2, height/2+48);
-      text("w <-  y  -> s   ", width/2, height/2+48+24);
-      text("f <-  z  -> r   ", width/2, height/2+48+24+24);
-      text("                ", width/2, height/2+48+24+48);
-      text("h    for  Home   ", width/2, height/2+48+48+48);
+      text("Calibrate the Arm First.", width*.6, height/2); 
+      text("a <-  x  -> d   ", width*.6, height/2+48);
+      text("w <-  y  -> s   ", width*.6, height/2+48+24);
+      text("f <-  z  -> r   ", width*.6, height/2+48+24+24);
+      text("                ", width*.6, height/2+48+24+48);
+      text("h    for  Home   ", width*.6, height/2+48+48+48);
     }
 
     if (mousePressed == true && DrawFlag==1) {
@@ -246,6 +246,8 @@ void draw() {
       Btn_BOD.hide();
       Btn_Run.show();
       Btn_TraceBD.hide();
+      Btn_Run.show();
+      Btn_CLS.show();
     } else { 
       BoundaryCount+=1;
     }
@@ -301,20 +303,19 @@ void draw() {
     rect(width*.65, height*0.91, width*0.3*float(PointCount)/ PointData.size(), height*.06);
   }
 
-  if (PointData.size()>1&&RunningFlag==0) {// Ready to draw
+  if (PointData.size()>1&&RunningFlag==0) {// Ready to draw by arm
     Btn_Run.show();
     Btn_BOD.show();
     GetBoundary();
     toggle_ShowBD.show();
     Btn_TraceBD.show();
-     Btn_Draw.hide();
+    Btn_Draw.hide();
+    Btn_CLS.show();
   }
 }
 
 void keyPressed() {
-  if (key == '1') {   
-    PointData.add(0, new PVector(0, 0)); //Set the drawing reference point to the top left of the screen
-  }
+ 
 
   if (key == 'g') {   
 
@@ -391,7 +392,7 @@ void StartArmDraw() {
     Btn_BOD.hide();
     Btn_TraceBD.hide();
     Btn_BackToCenter.hide();
-
+    Btn_CLS.hide();
     Btn_Pause.show();
 
     PVector move= CalcMove(PointData.get(0), PointData.get(1) );
@@ -403,6 +404,14 @@ void StartArmDraw() {
   }
 }
 
+void ClearDraw() {
+  RunningFlag=0;
+  DrawFlag=1;
+  PointData.clear();
+  PointData.add(new PVector(width*.5, width*.5));// Set Center for reference point
+toggle_ShowBD.setValue(false);
+}
+
 void DrawBoundary() {
   GetBoundary();
   ArmMove(0, 0, +5.5, 5000); // PenUP
@@ -411,6 +420,10 @@ void DrawBoundary() {
   DrawFlag=0;
   DrawBound=0;
   toggle_ShowBD.setValue(true);
+  Btn_Run.hide();
+  Btn_CLS.hide();
+  Btn_BOD.hide();
+  Btn_TraceBD.hide();
 }
 
 void TraceBoundary() {
@@ -421,6 +434,10 @@ void TraceBoundary() {
   DrawFlag=0;
   DrawBound=1;
   toggle_ShowBD.setValue(true);
+  Btn_Run.hide();
+  Btn_CLS.hide();
+  Btn_BOD.hide();
+  Btn_TraceBD.hide();
 }
 
 void GetBoundary() {

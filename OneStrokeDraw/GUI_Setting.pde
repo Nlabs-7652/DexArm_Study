@@ -1,5 +1,5 @@
 
-ControlP5 Btn_10, Btn_1, Btn_01, Btn_Draw, Btn_Run, Btn_BOD,  Btn_BackToCenter, Btn_TraceBD, Btn_Pause, Btn_Cancel;
+ControlP5 Btn_UP, Btn_Dwn, Btn_10, Btn_1, Btn_01, Btn_Draw, Btn_CLS, Btn_Run, Btn_BOD, Btn_BackToCenter, Btn_TraceBD, Btn_Pause, Btn_Cancel;
 
 Toggle toggle_ShowBD;
 
@@ -25,8 +25,8 @@ void GUI_init() {
     .hide(); 
 
 
-   Btn_BackToCenter= new ControlP5(this);
-   Btn_BackToCenter.addButton("ArmBackToCenter")
+  Btn_BackToCenter= new ControlP5(this);
+  Btn_BackToCenter.addButton("ArmBackToCenter")
     .setFont(font)
     .setLabel("Prepare_for_ReDraw") 
     .setPosition(width*.2, height*.9)
@@ -35,13 +35,30 @@ void GUI_init() {
     .setColorCaptionLabel(color(255, 255, 0));
 
 
+  Btn_UP= new ControlP5(this);
+  Btn_UP.addButton("Zup")
+    .setFont(font)
+    .setLabel("Z Up") 
+    .setPosition(width*.2, height*.4)
+    .setSize(int(width*.1), int(height*.09))
+    .setColorBackground(color(0, 0, 250)) 
+    .setColorCaptionLabel(color(255, 255, 0));
+
+  Btn_Dwn= new ControlP5(this);
+  Btn_Dwn.addButton("Zdwn")
+    .setFont(font)
+    .setLabel("Z Down") 
+    .setPosition(width*.2, height*.6)
+    .setSize(int(width*.1), int(height*.09))
+    .setColorBackground(color(0, 0, 250)) 
+    .setColorCaptionLabel(color(255, 255, 0));
 
 
   Btn_10 = new ControlP5(this);
   Btn_10.addButton("x10")
     .setFont(font)
     .setLabel("10") 
-    .setPosition(width*.1, height*.9)
+    .setPosition(width*.1, height*.5)
     .setSize(int(width*.1), int(height*.09))
     .setColorBackground(color(0, 0, 250)) 
     .setColorCaptionLabel(color(255, 255, 0));
@@ -50,7 +67,7 @@ void GUI_init() {
   Btn_1.addButton("x1")
     .setLabel("1") 
     .setFont(font)
-    .setPosition(width*.2, height*.9)
+    .setPosition(width*.2, height*.5)
     .setSize(int(width*.1), int(height*.09))
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
@@ -59,7 +76,7 @@ void GUI_init() {
   Btn_01.addButton("x01")
     .setLabel("0.1") 
     .setFont(font)
-    .setPosition(width*.3, height*.9)
+    .setPosition(width*.3, height*.5)
     .setSize(int(width*.1), int(height*.09))
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
@@ -75,19 +92,19 @@ void GUI_init() {
 
   Btn_BOD = new ControlP5(this);
   Btn_BOD.addButton("DrawBoundary")
-    .setLabel("Draw_Boundary") 
+    .setLabel("Draw_BD") 
     .setFont(font)
-    .setPosition(width*.40, height*.9)
-    .setSize(int(width*.23), int(height*.09))
+    .setPosition(width*.30, height*.9)
+    .setSize(int(width*.15), int(height*.09))
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
   Btn_TraceBD= new ControlP5(this);
   Btn_TraceBD.addButton("TraceBoundary")
     .setFont(font)
-    .setLabel("Trace_Boundary") 
+    .setLabel("Trace_BD") 
     .setPosition(width*.15, height*.9)
-    .setSize(int(width*.23), int(height*.09))
+    .setSize(int(width*.15), int(height*.09))
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
@@ -119,14 +136,22 @@ void GUI_init() {
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
-
+  Btn_CLS=new ControlP5(this);
+  Btn_CLS.addButton("ClearDraw")
+    .setLabel("Clear") 
+    .setFont(font)
+    .setPosition(width*.5, height*.9)
+    .setSize(int(width*.15), int(height*.09))
+    .setColorBackground(color(0, 0, 150)) 
+    .setColorCaptionLabel(color(255, 255, 0));
 
   Btn_Run .hide();
   Btn_BOD.hide();
- Btn_BackToCenter.hide();
+  Btn_BackToCenter.hide();
   Btn_TraceBD.hide();
   Btn_Cancel.hide();
   Btn_Pause.hide();
+  Btn_CLS.hide();
 }
 
 void x10() {
@@ -147,9 +172,19 @@ void x01() {
   Btn_1 .setColorBackground(color(0, 0, 150)) ;
   Btn_10 .setColorBackground(color(0, 0, 150)) ;
 }
+
+void Zup() {
+  ArmMove(0, 0, Inc, FSpeed);
+}
+void Zdwn() {
+
+  ArmMove(0, 0, -1*Inc, FSpeed);
+}
 void MouseDraw() {
   DrawFlag=1;
   Btn_01.hide();
   Btn_1 .hide();
   Btn_10 .hide();
+  Btn_Dwn.hide();
+  Btn_UP.hide();
 }
