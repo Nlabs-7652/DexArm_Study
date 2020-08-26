@@ -14,10 +14,9 @@ DexArm study
 　After calibrating top of the Pen with arm to a paper, draw on screen.
 　Then the Arm will draw the same as the screen by one stroke or Normal draw.
  
-<p align="center">
-  <img src="http://regeneration.med.saga-u.ac.jp/OneStrokeDog-final.gif" width="350" title="One Stroke Dog">
-  <img src="your_relative_path_here_number_2_large_name" width="350" alt="accessibility text">
-</p>
+![arm](https://user-images.githubusercontent.com/53891066/91298407-f3f49280-e7da-11ea-9e99-bf575e732066.JPG)
+![dog](https://user-images.githubusercontent.com/53891066/91298419-f6ef8300-e7da-11ea-8462-c06707a256b6.JPG)
+
 
 ### LICENCE
  　
