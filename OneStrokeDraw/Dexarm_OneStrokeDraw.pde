@@ -1,9 +1,10 @@
 //  Example testing sketch for DexArm
 //  One Stroke Draw for DexArm v1.2
 //  
-//  Written By Nlab7652,  2020
+//  Written By Nlab7652, Summer 2020
 //
-//
+// Copyright (c) 2020 Nakayama Lab
+// Released under the MIT license
 //
 //
 //
