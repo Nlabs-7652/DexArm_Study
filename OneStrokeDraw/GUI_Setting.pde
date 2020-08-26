@@ -1,7 +1,11 @@
 
+
+
+
+
 ControlP5 Btn_UP, Btn_Dwn, Btn_10, Btn_1, Btn_01, Btn_Draw, Btn_CLS, Btn_Run, Btn_BOD, Btn_BackToCenter, Btn_TraceBD, Btn_Pause, Btn_Cancel;
 
-Toggle toggle_ShowBD;
+Toggle toggle_ShowBD, toggle_One;
 
 void GUI_init() {
   INTERFACES = new ControlP5(this);
@@ -9,14 +13,34 @@ void GUI_init() {
 
 
 
-  int FontSize=int(32*width/1500);
+
   f = createFont("Arial", FontSize, true); 
   ControlFont font = new ControlFont(f, FontSize);
 
+  // Set Font size for Serial select dialog 
+  // Using Java libraly
 
-  toggle_ShowBD=  INTERFACES.addToggle("toggle_ShowBD")
+  UIManager.put("OptionPane.messageFont", new Font("", Font.PLAIN, 10+FontSize));
+  UIManager.put("OptionPane.buttonFont", new Font("", Font.PLAIN, FontSize));
+  UIManager.put("ComboBox.font", new Font("", Font.BOLD, FontSize)); // It took almost 3hrs to find the key for this (TvT)
+
+  ////////////////////////////////////
+
+  toggle_One=INTERFACES.addToggle("Toggle_One") // OneStroke mode switch
+    .setPosition(width*0.8, height*.912)
+    .setColorBackground(color(155, 155, 155))
+    .setFont(font)
+    .setValue(false)
+    .setSize((int)(width*0.1), (int)(height*.05)) 
+    .setLabel("One_Stroke")
+    .setMode(ControlP5.SWITCH)
+    .hide(); 
+
+  toggle_ShowBD=  INTERFACES.addToggle("toggle_ShowBD") // Show Boundary switch
     .setPosition(20, height*.912)
     .setColorBackground(color(155, 155, 155))
+    .setColorForeground(color(0, 0, 255))
+    .setColorActive(color(0, 255, 0))
     .setFont(font)
     .setValue(false)
     .setSize((int)(width*0.1), (int)(height*.05)) 
@@ -25,10 +49,11 @@ void GUI_init() {
     .hide(); 
 
 
+
   Btn_BackToCenter= new ControlP5(this);
   Btn_BackToCenter.addButton("ArmBackToCenter")
     .setFont(font)
-    .setLabel("Prepare_for_ReDraw") 
+    .setLabel("Prepare_for_Draw_Again") 
     .setPosition(width*.2, height*.9)
     .setSize(int(width*.3), int(height*.09))
     .setColorBackground(color(0, 0, 250)) 
@@ -41,7 +66,8 @@ void GUI_init() {
     .setLabel("Z Up") 
     .setPosition(width*.2, height*.4)
     .setSize(int(width*.1), int(height*.09))
-    .setColorBackground(color(0, 0, 250)) 
+    .setColorBackground(color(0, 0, 150))
+    .setColorActive(color(100, 250, 250))
     .setColorCaptionLabel(color(255, 255, 0));
 
   Btn_Dwn= new ControlP5(this);
@@ -50,7 +76,8 @@ void GUI_init() {
     .setLabel("Z Down") 
     .setPosition(width*.2, height*.6)
     .setSize(int(width*.1), int(height*.09))
-    .setColorBackground(color(0, 0, 250)) 
+    .setColorBackground(color(0, 0, 150))
+    .setColorActive(color(100, 250, 250))
     .setColorCaptionLabel(color(255, 255, 0));
 
 
@@ -60,7 +87,7 @@ void GUI_init() {
     .setLabel("10") 
     .setPosition(width*.1, height*.5)
     .setSize(int(width*.1), int(height*.09))
-    .setColorBackground(color(0, 0, 250)) 
+    .setColorBackground(color(0, 150, 250)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
   Btn_1 = new ControlP5(this);
@@ -83,7 +110,7 @@ void GUI_init() {
 
   Btn_Draw = new ControlP5(this);
   Btn_Draw.addButton("MouseDraw")
-    .setLabel("Mouse_Draw") 
+    .setLabel("Draw_data") 
     .setFont(font)
     .setPosition(width*.55, height*.9)
     .setSize(int(width*.25), int(height*.09))
@@ -113,8 +140,8 @@ void GUI_init() {
   Btn_Run.addButton("StartArmDraw")
     .setLabel("Arm_Draw") 
     .setFont(font)
-    .setPosition(width*.7, height*.9)
-    .setSize(int(width*.2), int(height*.09))
+    .setPosition(width*.6, height*.9)
+    .setSize(int(width*.15), int(height*.09))
     .setColorBackground(color(100, 100, 250)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
@@ -140,8 +167,8 @@ void GUI_init() {
   Btn_CLS.addButton("ClearDraw")
     .setLabel("Clear") 
     .setFont(font)
-    .setPosition(width*.5, height*.9)
-    .setSize(int(width*.15), int(height*.09))
+    .setPosition(width*.45, height*.9)
+    .setSize(int(width*.10), int(height*.09))
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
@@ -152,39 +179,4 @@ void GUI_init() {
   Btn_Cancel.hide();
   Btn_Pause.hide();
   Btn_CLS.hide();
-}
-
-void x10() {
-  Inc=10;
-  Btn_01.setColorBackground(color(0, 0, 150)); 
-  Btn_1 .setColorBackground(color(0, 0, 150)) ;
-  Btn_10 .setColorBackground(color(0, 0, 250)) ;
-}
-void x1() {
-  Inc=1;
-  Btn_01.setColorBackground(color(0, 0, 150)); 
-  Btn_1 .setColorBackground(color(0, 0, 250)) ;
-  Btn_10 .setColorBackground(color(0, 0, 150)) ;
-}
-void x01() {
-  Inc=0.1;
-  Btn_01.setColorBackground(color(0, 0, 250)); 
-  Btn_1 .setColorBackground(color(0, 0, 150)) ;
-  Btn_10 .setColorBackground(color(0, 0, 150)) ;
-}
-
-void Zup() {
-  ArmMove(0, 0, Inc, FSpeed);
-}
-void Zdwn() {
-
-  ArmMove(0, 0, -1*Inc, FSpeed);
-}
-void MouseDraw() {
-  DrawFlag=1;
-  Btn_01.hide();
-  Btn_1 .hide();
-  Btn_10 .hide();
-  Btn_Dwn.hide();
-  Btn_UP.hide();
 }
