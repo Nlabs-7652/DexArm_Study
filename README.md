@@ -15,7 +15,7 @@ DexArm study
 　Then the Arm will draw the same as the screen by one stroke or Normal draw.
  
 <p align="center">
-  <img src="https://www.dropbox.com/s/x6dqjxq204s2to5/OneStrokeDog-final.gif?dl=0" width="350" title="One Stroke Dog">
+  <img src="http://regeneration.med.saga-u.ac.jp/OneStrokeDog-final.gif" width="350" title="One Stroke Dog">
   <img src="your_relative_path_here_number_2_large_name" width="350" alt="accessibility text">
 </p>
 
