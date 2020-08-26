@@ -6,9 +6,24 @@ DexArm study
 
   A study code to learn G-CODE with Dexarm.
 
-### Install 
- Download entire folder and files.
- Open them with Processing 3.x and run.
+
+
+
+### Requirement 
+  Processing 3.x
+  https://processing.org/
+  
+ ContoleP5
+ http://www.sojamo.de/libraries/controlP5/
+  (Install via Processing)
+ 
+ ### Binary
+
+ MacOSX https://www.dropbox.com/s/uulcakiy349xmfm/OnStrokeDraw_1.2_OSX.zip?dl=0
+ 
+ Win64 https://www.dropbox.com/s/yj591g9jg1gq8e4/OneStrokeDraw_1.2_Win64.zip?dl=0
+
+ UnZip 
 
 ### Usage
 　After calibrating top of the Pen with arm to a paper, draw on screen.
