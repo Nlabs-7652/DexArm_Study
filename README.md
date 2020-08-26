@@ -10,6 +10,7 @@ DexArm study
 
 
 ### Requirement 
+
   Processing 3.x
   https://processing.org/
   
@@ -17,13 +18,14 @@ DexArm study
  http://www.sojamo.de/libraries/controlP5/
   (Install via Processing)
  
- ### Binary
+ ### Executable file
 
  MacOSX https://www.dropbox.com/s/uulcakiy349xmfm/OnStrokeDraw_1.2_OSX.zip?dl=0
  
  Win64 https://www.dropbox.com/s/yj591g9jg1gq8e4/OneStrokeDraw_1.2_Win64.zip?dl=0
 
- UnZip 
+ UnZip and Run!
+ ( You may asked to install JAVA runtime)
 
 ### Usage
 　After calibrating top of the Pen with arm to a paper, draw on screen.
