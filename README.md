@@ -36,8 +36,9 @@ DexArm study
 
 
 ### LICENCE
- 　
+This source code is provided under MIT license. Please feel free to copy, modify, re-distribute anyway you want.
+
 Written By Nlab7652, Summer 2020
 
  　Copyright (c) 2020 Nakayama Lab
- 　Released under the MIT license
+ 　  http://regeneration.med.saga-u.ac.jp/index-e.html
