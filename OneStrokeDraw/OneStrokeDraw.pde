@@ -22,7 +22,7 @@ import controlP5.*;
 
 ControlP5 INTERFACES;
 
-Float version=1.21;
+Float version = 1.21;
 /////////////////
 
 Boolean Need_Select_Serial = true;   // If you need select Serial port  set true 
@@ -104,7 +104,7 @@ void settings() {
 }
 
 void setup() {
-  surface.setTitle("DexArm Study ver"+version);
+  surface.setTitle("DexArm Study ver "+version);
 
   Scale = ArmSpan/(float(width));
   FontSize = int(32*width/1500);
