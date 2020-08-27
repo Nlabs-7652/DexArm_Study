@@ -25,18 +25,20 @@ ControlP5 INTERFACES;
 Float version=1.21;
 /////////////////
 
-Boolean Need_Select_Serial=true;   // If you need select Serial port  set true 
-String myArmPort="COM3";           // If serial port is fixed this com port will use
-int baudrate=115200;               // change baud rate to your liking
+Boolean Need_Select_Serial = true;   // If you need select Serial port  set true 
+String myArmPort = "COM3";           // If serial port is fixed this com port will use
+int baudrate = 115200;               // change baud rate to your liking
 
 /////////////////
-int sizeW = 750  ;   // Screen size
+int sizeW = 750;   // Screen size
 int sizeH = 750;     // should be square?
 
-Float ArmSpan=150.0; // Range of the arm move 
+Float ArmSpan = 150.0; // Range of the arm move 
 
-int FSpeed=5000;     // Feedrate in mm per minute. (Speed of print head movement)
-int delay_time=500;  
+int FSpeed = 5000;     // Feedrate in mm per minute. (Speed of print head movement)
+
+int delay_time = 500;  //This value represents the waiting time (in milliseconds) after the command is sent to the serial port.
+//Adjusting this latency will speed up arm movement, but may cause data loss between serial ports, so adjust it to suit your environment.
 
 ///////////////////
 Float Scale;         // from Screen to Arm
@@ -55,40 +57,40 @@ String mes = "";
 
 
 ArrayList<PVector>PointData  = new ArrayList<PVector>();
-int PointCount=0;
+int PointCount = 0;
 ArrayList<PVector>BoundaryPointS  = new ArrayList<PVector>();
-int BoundaryCount=0;
+int BoundaryCount = 0;
 
-int LimitReached=0; // Count XY limit during move
-int StopWhenLimit=3; //  If limit message evoked repeatedly, recalibration might be necessary
-
-
-PVector PointStrage= new PVector(0, 0, 0);
-int FlagNeedStorge=0;
+int LimitReached = 0; // Count XY limit during move
+int StopWhenLimit = 3; //  If limit message evoked repeatedly, recalibration might be necessary
 
 
+PVector PointStrage = new PVector(0, 0, 0);
+int FlagNeedStorge = 0;
 
-int RunningFlag=0;
+
+
+int RunningFlag = 0;
 //  0   Calibration
 //  1   Arm Draw
 //  2   End draw
 //  3   Move Boundary
 //　4　 Pause
 
-int WaitFlag=0;
-int DrawFlag=0;
-int PenStatus=0;
-int DrawBound=0;
-int LineDraw=0;
+int WaitFlag = 0;
+int DrawFlag = 0;
+int PenStatus = 0;
+int DrawBound = 0;
+int LineDraw = 0;
 
 
 PFont f;
-float Inc=10;
-float PenZvalue=10.5; // amount of movement in the Z for Pen Up or Down 
-float FinishZ=50.0; // When finish drawing, Pen will UP 
+float Inc = 10; // Amount of the move when calibration
+float PenZvalue = 10.5; // amount of movement in the Z for Pen Up or Down 
+float FinishZ = 50.0; // When finish drawing, Pen will UP 
 
 
-
+// For Boundary Check
 PVector Bposition;
 PVector BPrePoint;
 float BarmX, BarmY, BarmZ;
@@ -104,8 +106,8 @@ void settings() {
 void setup() {
   surface.setTitle("DexArm Study ver"+version);
 
-  Scale=ArmSpan/(float(width));
-  FontSize=int(32*width/1500);
+  Scale = ArmSpan/(float(width));
+  FontSize = int(32*width/1500);
   GUI_init();
 
   PointData.add(new PVector(width*.5, width*.5));// Set Center for reference point
@@ -152,7 +154,7 @@ void setup() {
         //////        Modified the code by macshout 
         //////                     https://forum.processing.org/two/discussion/7140/how-to-let-the-user-select-com-serial-port-within-a-sketch
 
-        String COMx="", COMlist = "";
+        String COMx = "", COMlist = "";
         // If more than 2 serial ports.... do something in the future
         for (int j = 0; j < num_serial_ports; ) {
           COMlist += char(j+'a') + " = " + Serial.list()[j];
@@ -222,7 +224,7 @@ void draw() {
   case 0:
     textFont(f);       
     fill(255);
-    if (PointData.size()==1 && DrawFlag==0) {  
+    if (PointData.size() == 1 && DrawFlag == 0) {  
       textAlign(CENTER);
       text("Calibrate the Arm First.", width*.6, height/2); 
       text("a <-  x  -> d   ", width*.6, height/2+FontSize);
@@ -232,7 +234,7 @@ void draw() {
       text("h    for  Home  ", width*.6, height/2+FontSize*6);
     }
 
-    if (mousePressed == true && DrawFlag==1) {
+    if (mousePressed == true && DrawFlag == 1) {
 
       if (mouseY<(float)height*.88) {//avoid drawing on Button Area
 
@@ -247,8 +249,8 @@ void draw() {
   case 1: // Start move Arm
     println("Now Running at "+PointCount+"/"+PointData.size() );
 
-    if (PointCount>=PointData.size()) { //Draw finished
-      RunningFlag=2;
+    if (PointCount >= PointData.size()) { //Draw finished
+      RunningFlag = 2;
       ArmMove(0, 0, FinishZ, FSpeed); // Pen Up
 
       Btn_Run.show();
@@ -257,31 +259,31 @@ void draw() {
       Btn_Pause.hide();
       break;
     }
-    if (WaitFlag==1) {  // if arm is still moving, wait incoming event, exit loop 
+    if (WaitFlag == 1) {  // if arm is still moving, wait incoming event, exit loop 
       println("Arm still moving\n");
       break;
     }
-    if (PenStatus==1) {
+    if (PenStatus == 1) {
       ArmMove(0, 0, -1*PenZvalue, 5000); // PenDown
       PenStatus=0;
     }
 
 
-    PVector move= CalcMove(PointData.get(PointCount-1), PointData.get(PointCount) );
+    PVector move = CalcMove(PointData.get(PointCount-1), PointData.get(PointCount) );
 
-    if (move.x==0&&move.y==0) {  // Skip same points.
+    if (move.x == 0 && move.y == 0) {  // Skip same points.
       println("Skip "+PointCount+"\n");
     } else { 
-      if (toggle_One.getBooleanValue()&&PointData.get(PointCount-1).z==0) { // if not OneStroke
+      if (toggle_One.getBooleanValue()&&PointData.get(PointCount-1).z == 0) { // if not OneStroke
         ArmMove(0, 0, PenZvalue, 5000); // PenUp
-        PenStatus=1;
+        PenStatus = 1;
         delay(500);
       }
       //Draw
       ArmMove(move.x, move.y, 0, FSpeed);
     }
 
-    PointCount=PointCount+1;
+    PointCount = PointCount+1;
     break;
 
   case 2:
@@ -292,61 +294,61 @@ void draw() {
 
   case 3:
     //Move Boundary
-    if (WaitFlag==1) { //Skip If arm is Busy
+    if (WaitFlag == 1) { //Skip If arm is Busy
       println("Arm Busy");
       break;
     }
 
     if (BoundaryCount<BoundaryPointS.size()-1) {
-      Bposition= BoundaryPointS.get(BoundaryCount+1); //
-      BPrePoint= BoundaryPointS.get(BoundaryCount);
+      Bposition = BoundaryPointS.get(BoundaryCount+1); //
+      BPrePoint = BoundaryPointS.get(BoundaryCount);
 
-      if (BoundaryCount==1) {
+      if (BoundaryCount == 1) {
 
-        if (DrawBound==0) {
+        if (DrawBound == 0) {
           ArmMove(0, 0, -1*PenZvalue, 5000); // PenDown
-          PenStatus=0;
+          PenStatus = 0;
         }
       }
     }
-    if (BoundaryCount==BoundaryPointS.size()-1) {
-      Bposition= BoundaryPointS.get(1); //
-      BPrePoint= BoundaryPointS.get(4);
+    if (BoundaryCount == BoundaryPointS.size()-1) {
+      Bposition = BoundaryPointS.get(1); //
+      BPrePoint = BoundaryPointS.get(4);
 
-      BarmZ=0;
+      BarmZ = 0;
     }
 
 
-    if (BoundaryCount==5) {
-      if (DrawBound==0) {
+    if (BoundaryCount == 5) {
+      if (DrawBound == 0) {
         ArmMove(0, 0, PenZvalue, 5000); // PenUP
-        PenStatus=1;
+        PenStatus = 1;
       }
-      Bposition= BoundaryPointS.get(0); // Back to Original pen position
-      BPrePoint= BoundaryPointS.get(1);
+      Bposition = BoundaryPointS.get(0); // Back to Original pen position
+      BPrePoint = BoundaryPointS.get(1);
     }
 
 
     println("Count "+BoundaryCount+" from :"+BPrePoint+" target :"+Bposition);
-    BarmX=((-BPrePoint.x+Bposition.x)*Scale);
-    BarmY=((BPrePoint.y-Bposition.y)*Scale);
+    BarmX = ((-BPrePoint.x+Bposition.x)*Scale);
+    BarmY = ((BPrePoint.y-Bposition.y)*Scale);
 
-    if (BarmX==0&&BarmY==0) { 
+    if (BarmX == 0 && BarmY == 0) { 
       println("Skip "+BoundaryCount+"\n");
     } else { 
 
       ArmMove(BarmX, BarmY, BarmZ, FSpeed);
     }
 
-    if (BoundaryCount>4) {  //End MoveBoundary
-      RunningFlag=0;
+    if (BoundaryCount > 4) {  //End MoveBoundary
+      RunningFlag = 0;
       Btn_BOD.hide();
       Btn_Run.show();
       Btn_TraceBD.hide();
       Btn_Run.show();
       Btn_CLS.show();
     } else { 
-      BoundaryCount+=1;
+      BoundaryCount += 1;
     }
 
     break;
@@ -379,7 +381,7 @@ void draw() {
     fill(255);
 
     if (!toggle_One.getBooleanValue()) { // OneStroke mode
-      PVector position=  PointData.get(i);
+      PVector position =  PointData.get(i);
 
       stroke(10, 200, 155);
       strokeWeight(1);
@@ -388,10 +390,10 @@ void draw() {
       strokeWeight(8);
       line(PointData.get(i-1).x, PointData.get(i-1).y, PointData.get(i).x, PointData.get(i).y);
     } else {   // Normal Stroke mode
-      PVector PrePosition=  PointData.get(i-1);
-      PVector Position=  PointData.get(i);
+      PVector PrePosition =  PointData.get(i-1);
+      PVector Position =  PointData.get(i);
 
-      if (PrePosition.z>0) { //PenDown
+      if (PrePosition.z > 0) { //PenDown
         stroke(10, 100, 55);
         strokeWeight(1); 
 
@@ -409,13 +411,13 @@ void draw() {
   }
 
   //Show Progress bar and accepted Point by arm when Running
-  if (RunningFlag==1 || RunningFlag==4) {
+  if (RunningFlag == 1 || RunningFlag == 4) {
 
     //DrawPoint
     fill(255, 0, 255);
     stroke(100, 20, 25);
     strokeWeight(2);  
-    PVector position=  PointData.get(PointCount-1);
+    PVector position =  PointData.get(PointCount-1);
     ellipse(position.x, position.y, 25, 25);
 
     //Draw Progress bar
@@ -426,7 +428,7 @@ void draw() {
     rect(width*.65, height*0.91, width*0.3*float(PointCount)/ PointData.size(), height*.06);
   }
 
-  if (PointData.size()>1&&RunningFlag==0) {//  Ready to draw by arm
+  if (PointData.size()>1&&RunningFlag == 0) {//  Ready to draw by arm
     GetBoundary();
 
     Btn_Run.show();
@@ -483,7 +485,7 @@ void keyPressed() {
   }
 
   if (key == 'b') {   
-    RunningFlag=2;
+    RunningFlag = 2;
 
     println("Pause");
   }
@@ -500,23 +502,23 @@ void keyPressed() {
 }
 
 void GetBoundary() {
-  float MaxX=-1*ArmSpan, MaxY=-1*ArmSpan, MinX=ArmSpan, MinY=ArmSpan;
-  BoundaryCount=0;
+  float MaxX = -1*ArmSpan, MaxY = -1*ArmSpan, MinX = ArmSpan, MinY = ArmSpan;
+  BoundaryCount = 0;
   BoundaryPointS.clear();
 
   if (PointData.size()>0) {
     for (int i = 0; i<PointData.size(); i++) {
-      if (PointData.get(i).x>=MaxX) {
-        MaxX=PointData.get (i).x;
+      if (PointData.get(i).x >= MaxX) {
+        MaxX = PointData.get (i).x;
       }
-      if (PointData.get(i).y>=MaxY) {
-        MaxY=PointData.get (i).y;
+      if (PointData.get(i).y >= MaxY) {
+        MaxY = PointData.get (i).y;
       }
-      if (PointData.get(i).x<=MinX) {
-        MinX=PointData.get (i).x;
+      if (PointData.get(i).x <= MinX) {
+        MinX = PointData.get (i).x;
       }
-      if (PointData.get(i).y<=MinY) {
-        MinY=PointData.get (i).y;
+      if (PointData.get(i).y <= MinY) {
+        MinY = PointData.get (i).y;
       }
     }
   }
@@ -533,14 +535,14 @@ void GetBoundary() {
 
 PVector CalcMove(PVector fromPoint, PVector ToPoint  ) {
 
-  float armX=((-fromPoint.x+ToPoint.x)*Scale);
-  float armY=((fromPoint.y-ToPoint.y)*Scale);
+  float armX = ((-fromPoint.x+ToPoint.x)*Scale);
+  float armY = ((fromPoint.y-ToPoint.y)*Scale);
 
   return new PVector(armX, armY);
 }
 
 void ArmMove(float x, float y, float z, int f) {
-  mes="G1 X"+str(x)+" Y"+str(y)+" Z"+str(z)+" F"+str(f)+"\n";
+  mes = "G1 X"+str(x)+" Y"+str(y)+" Z"+str(z)+" F"+str(f)+"\n";
   myPort.write(mes);
   println("ArmMove "+mes);
   delay(delay_time);
@@ -567,16 +569,16 @@ void DecodeSerialEvent(String mes) {
 
   if (mes.indexOf("busy")>0) { 
     println("Arm Busy-------------\n");
-    WaitFlag=1;
+    WaitFlag = 1;
   } else {
-    WaitFlag=0; // arm is ready to accept new command
+    WaitFlag = 0; // arm is ready to accept new command
   }
 
-  if (RunningFlag==1 && mes.indexOf("limit")>0) {  // when arm reach limits, better stop drwaing and recab the arm
-    LimitReached+=1;
+  if (RunningFlag == 1 && mes.indexOf("limit") > 0) {  // when arm reach limits, better stop drwaing and recab the arm
+    LimitReached += 1;
 
-    if (StopWhenLimit<=LimitReached) {  
-      RunningFlag=4;
+    if (StopWhenLimit <= LimitReached) {  
+      RunningFlag = 4;
 
       int option = JOptionPane.showConfirmDialog(frame, "Continue anyway? or Quit ", 
         "Arm reached XY Limit repeatedly ", JOptionPane.YES_NO_OPTION, 
@@ -598,24 +600,24 @@ void DecodeSerialEvent(String mes) {
 
   // This feature is not inuse so far. But a method to save certain position of the arm 
 
-  if (mes.indexOf("Count A")>0) { // Get Current (relative) cordination of the Arm After M1114 fired 
+  if (mes.indexOf("Count A") > 0) { // Get Current (relative) cordination of the Arm After M1114 fired 
 
-    String Buf =mes.substring(0, mes.indexOf("Count A")) ;
+    String Buf = mes.substring(0, mes.indexOf("Count A")) ;
     println(Buf);
-    if (Buf.indexOf("E:")>0) {
+    if (Buf.indexOf("E:") > 0) {
       String[] Res=Buf.split(" ");
 
       for (String A : Res) {
-        print(" Position :"+A);
-        println("  Each cordi :    "+A.substring(2, A.length()));
-        float theValue=float(A.substring(2, A.length()));
-        println("TheValue "+theValue);
+        print(" Position :" + A);
+        println("  Each cordi :    " + A.substring(2, A.length()));
+        float theValue = float(A.substring(2, A.length()));
+        println("TheValue "+ theValue);
       }
-      if (FlagNeedStorge==1&& Res.length>0) {
-        PointStrage.x=float(Res[0].substring(2, Res[0].length()));
-        PointStrage.y=float(Res[1].substring(2, Res[1].length()));
-        PointStrage.z=float(Res[2].substring(2, Res[2].length()));
-        FlagNeedStorge=0;
+      if (FlagNeedStorge == 1 && Res.length > 0) {
+        PointStrage.x = float(Res[0].substring(2, Res[0].length()));
+        PointStrage.y = float(Res[1].substring(2, Res[1].length()));
+        PointStrage.z = float(Res[2].substring(2, Res[2].length()));
+        FlagNeedStorge = 0;
       }
     }
   }//// End Get Cordination

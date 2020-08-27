@@ -26,7 +26,7 @@ void GUI_init() {
 
   ////////////////////////////////////
 
-  toggle_One=INTERFACES.addToggle("Toggle_One") // OneStroke mode switch
+  toggle_One = INTERFACES.addToggle("Toggle_One") // OneStroke mode switch
     .setPosition(width*0.8, height*.912)
     .setColorBackground(color(155, 155, 155))
     .setFont(font)
@@ -36,7 +36,7 @@ void GUI_init() {
     .setMode(ControlP5.SWITCH)
     .hide(); 
 
-  toggle_ShowBD=  INTERFACES.addToggle("toggle_ShowBD") // Show Boundary switch
+  toggle_ShowBD = INTERFACES.addToggle("toggle_ShowBD") // Show Boundary switch
     .setPosition(20, height*.912)
     .setColorBackground(color(155, 155, 155))
     .setColorForeground(color(0, 0, 255))
@@ -50,7 +50,7 @@ void GUI_init() {
 
 
 
-  Btn_BackToCenter= new ControlP5(this);
+  Btn_BackToCenter = new ControlP5(this);
   Btn_BackToCenter.addButton("ArmBackToCenter")
     .setFont(font)
     .setLabel("Prepare_for_Draw_Again") 
@@ -60,7 +60,7 @@ void GUI_init() {
     .setColorCaptionLabel(color(255, 255, 0));
 
 
-  Btn_UP= new ControlP5(this);
+  Btn_UP = new ControlP5(this);
   Btn_UP.addButton("Zup")
     .setFont(font)
     .setLabel("Z Up") 
@@ -70,7 +70,7 @@ void GUI_init() {
     .setColorActive(color(100, 250, 250))
     .setColorCaptionLabel(color(255, 255, 0));
 
-  Btn_Dwn= new ControlP5(this);
+  Btn_Dwn = new ControlP5(this);
   Btn_Dwn.addButton("Zdwn")
     .setFont(font)
     .setLabel("Z Down") 
@@ -145,7 +145,7 @@ void GUI_init() {
     .setColorBackground(color(100, 100, 250)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
-  Btn_Pause= new ControlP5(this);
+  Btn_Pause = new ControlP5(this);
   Btn_Pause.addButton("PauseOnAndOff")
     .setLabel("Pause") 
     .setFont(font)
@@ -154,7 +154,7 @@ void GUI_init() {
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
-  Btn_Cancel=new ControlP5(this);
+  Btn_Cancel = new ControlP5(this);
   Btn_Cancel.addButton("CancelDraw")
     .setLabel("Cancel") 
     .setFont(font)
@@ -163,7 +163,7 @@ void GUI_init() {
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
-  Btn_CLS=new ControlP5(this);
+  Btn_CLS = new ControlP5(this);
   Btn_CLS.addButton("ClearDraw")
     .setLabel("Clear") 
     .setFont(font)
