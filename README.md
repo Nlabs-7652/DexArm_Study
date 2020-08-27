@@ -6,7 +6,7 @@ DexArm study
 
   A study code to learn G-CODE with Dexarm.
 
-
+![dog intro](https://user-images.githubusercontent.com/53891066/91371352-b714b400-e84b-11ea-890c-a1b06183c799.gif)
 
 
 ### Requirement 
