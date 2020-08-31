@@ -1,5 +1,5 @@
 //  Example testing sketch for DexArm
-//  One Stroke Draw for DexArm v1.21
+//  One Stroke Draw for DexArm v1.4
 //  
 //  Written By Nlab7652, Summer 2020
 //
@@ -22,7 +22,7 @@ import controlP5.*;
 
 ControlP5 INTERFACES;
 
-Float version = 1.21;
+Float version = 1.41;
 /////////////////
 
 Boolean Need_Select_Serial = true;   // If you need select Serial port  set true 
@@ -37,7 +37,7 @@ Float ArmSpan = 150.0; // Range of the arm move
 
 int FSpeed = 5000;     // Feedrate in mm per minute. (Speed of print head movement)
 
-int delay_time = 500;  //This value represents the waiting time (in milliseconds) after the command is sent to the serial port.
+int delay_time = 250;  //This value represents the waiting time (in milliseconds) after the command is sent to the serial port.
 //Adjusting this latency will speed up arm movement, but may cause data loss between serial ports, so adjust it to suit your environment.
 
 ///////////////////
@@ -82,7 +82,7 @@ int DrawFlag = 0;
 int PenStatus = 0;
 int DrawBound = 0;
 int LineDraw = 0;
-
+int NoArmMode=0;
 
 PFont f;
 float Inc = 10; // Amount of the move when calibration
@@ -95,34 +95,21 @@ PVector Bposition;
 PVector BPrePoint;
 float BarmX, BarmY, BarmZ;
 
-
+// File I/O
+PrintWriter fileWriter; 
+Table gotData;
 String getFile = null;
 
-
-void settings() {
-  size(sizeW, sizeH);
-}
-
-void setup() {
-  surface.setTitle("DexArm Study ver "+version);
-
-  Scale = ArmSpan/(float(width));
-  FontSize = int(32*width/1500);
-  GUI_init();
-
-  PointData.add(new PVector(width*.5, width*.5));// Set Center for reference point
-
-
-  //// Serial port setting
+void SerialSetON() {//// Serial port setting
 
   // get the number of serial ports in the list
   num_serial_ports = Serial.list().length;
 
-  if (  num_serial_ports==0) {
-    exit();
-  }
+  //if (  num_serial_ports==0) {
+  //  //   exit();
+  //}
 
-  if (!Need_Select_Serial&&  num_serial_ports>0) {
+  if (!Need_Select_Serial&&  num_serial_ports==1) {
     myPort = new Serial(this, myArmPort, baudrate); // change baud rate to your liking
 
     // Initialize theArm
@@ -134,20 +121,24 @@ void setup() {
 
     try {
       switch(num_serial_ports) {
-      case 0:
-        JOptionPane.showMessageDialog(frame, "Device is not connected to the PC");
-        exit();
-        break;
+        //case 0:
+        //  JOptionPane.showMessageDialog(frame, "No Arm, Just Draw!");
+        //  NoArmMode=1;
+        //  // exit();
 
-      case 1:  
-        myPort = new Serial(this, myArmPort, baudrate); 
 
-        // Initialize theArm
-        myPort.write("M1112\nG91\n"); 
-        println("Home");
-        delay(delay_time);
+        //  break;
 
-        break;
+        //case 1:  
+        //println("p");
+        //  myPort = new Serial(this, myArmPort, baudrate); 
+
+        //  // Initialize theArm
+        //  myPort.write("M1112\nG91\n"); 
+        //  println("Home");
+        //  delay(delay_time);
+
+        //  break;
 
       default:
         //////  If more than 2 Serial ports, let user select
@@ -169,8 +160,8 @@ void setup() {
           Serial.list(), 
           Serial.list()[0]);
 
-        if (COMx == null) exit();
-        if (COMx.isEmpty()) exit();
+        //if (COMx == null) exit();
+        //if (COMx.isEmpty()) exit();
         num_serial_ports = int(COMx.toLowerCase().charAt(0) - 'a') + 1;
 
 
@@ -184,11 +175,38 @@ void setup() {
       }
     }
     catch  (Exception e) {
-      JOptionPane.showMessageDialog(frame, "Device is not connected to the PC");
-      exit();
+      NoArmMode=1;
+
+      RunningFlag = 5;
+      JOptionPane.showMessageDialog(frame, "No Arm, Just Draw!");
+    } 
+    finally {
+
+      if (NoArmMode==0) {
+        Btn_01.show();
+        Btn_1.show();
+        Btn_10 .show();
+        Btn_Dwn.show();
+        Btn_UP.show();
+      };
     }
   }
-  /////////  End Serial port setting
+}/////////  End Serial port setting
+
+void settings() {
+  size(sizeW, sizeH);
+}
+
+void setup() {
+  surface.setTitle("DexArm Study ver "+version);
+
+  Scale = ArmSpan/(float(width));
+  FontSize = int(32*width/1500);
+  GUI_init();
+
+  PointData.add(new PVector(width*.5, width*.5));// Set Center for reference point
+  // RunningFlag = 0;
+  SerialSetON() ;
 }// end setup()
 
 
@@ -216,6 +234,8 @@ void draw() {
     toggle_One.setColorActive(color(200, 150, 205));
     toggle_One.setLabel("Normal_draw");
   }
+
+
   //// 
 
 
@@ -257,6 +277,9 @@ void draw() {
       Btn_BackToCenter.show();
       Btn_Cancel.hide();
       Btn_Pause.hide();
+      Btn_Save.show();
+      Btn_GCODE.show();
+      toggle_One.show();
       break;
     }
     if (WaitFlag == 1) {  // if arm is still moving, wait incoming event, exit loop 
@@ -358,8 +381,14 @@ void draw() {
     // wait for cancel or resume
     break;
   case 5:
-    //  for future feature?
+    //  Select Just Draw mode 
     // 
+    textFont(f);       
+    fill(255);
+    textAlign(CENTER);
+    text("One Stroke Draw.", width*.5, height/2); 
+    text("Draw and Edit without arm connection ", width*.5, height/2+FontSize);
+
     break;
 
   default:
@@ -393,7 +422,7 @@ void draw() {
       PVector PrePosition =  PointData.get(i-1);
       PVector Position =  PointData.get(i);
 
-      if (PrePosition.z > 0) { //PenDown
+      if (PrePosition.z > 0) { //PenUP
         stroke(10, 100, 55);
         strokeWeight(1); 
 
@@ -401,7 +430,7 @@ void draw() {
         strokeWeight(5); 
         stroke(200, 150, 205);
         line(PrePosition.x, PrePosition.y, Position.x, Position.y);
-      } else {  //PenUp
+      } else {  //PenDown
 
         stroke(10, 20, 55);
         strokeWeight(5); 
@@ -430,7 +459,7 @@ void draw() {
 
   if (PointData.size()>1&&RunningFlag == 0) {//  Ready to draw by arm
     GetBoundary();
-
+    Btn_Load.hide();
     Btn_Run.show();
     Btn_BOD.show();
     Btn_TraceBD.show();
@@ -438,8 +467,16 @@ void draw() {
 
     toggle_ShowBD.show();
     toggle_One.show();
-
+    Btn_Save.show();
     Btn_Draw.hide();
+    Btn_GCODE.show();
+
+
+    if (NoArmMode==1) {
+      Btn_Run.hide();
+      Btn_BOD.hide();
+      Btn_TraceBD.hide();
+    }
   }
 }
 
@@ -456,7 +493,27 @@ void keyPressed() {
 
     println("Home");
   }
+ if (key == '1') {   
+     Inc = 10;
+  Btn_01.setColorBackground(color(0, 0, 150)); 
+  Btn_1 .setColorBackground(color(0, 0, 150)) ;
+  Btn_10 .setColorBackground(color(0, 150, 255)) ;
 
+  }
+if (key == '2') {   
+     Inc = 1;
+  Btn_01.setColorBackground(color(0, 0, 150)); 
+  Btn_1 .setColorBackground(color(0, 150, 255)) ;
+  Btn_10 .setColorBackground(color(0, 0, 150)) ;
+
+  }
+  if (key == '3') {   
+     Inc = 0.1;
+  Btn_01.setColorBackground(color(0, 150, 255)); 
+  Btn_1 .setColorBackground(color(0, 0, 150)) ;
+  Btn_10 .setColorBackground(color(0, 0, 150)) ;
+
+  }
 
   if (key == 'a') {   
     ArmMove(Inc, 0, 0, FSpeed);
@@ -494,11 +551,26 @@ void keyPressed() {
   if (key == 'p') {   // Show current point of the head
     myPort.write("M114\n");
   }
-  if (key == 'o') { // File Open?
-  }
+  //if (key == 'o') { // File Open?
+  //  fileLoad();
+  //}
 
-  if (key == 'q') {   // Save File dialog?
-  }
+  //if (key == 'q') {   // Save File dialog?
+  //  println("File save");
+  //  fileSave();
+  //}
+
+  //if (key == 26) { //  Undo action?
+  //  println("Ctl+z");
+  //  //Delet last Point
+  //  fill(55, 50, 55);
+  //  stroke(200, 20, 25);
+  //  strokeWeight(2);  
+  //  PVector position =  PointData.get( PointData.size()-1);
+  //  ellipse(position.x, position.y, 55, 55);
+
+  //  PointData.remove( PointData.size()-1);
+  //}
 }
 
 void GetBoundary() {

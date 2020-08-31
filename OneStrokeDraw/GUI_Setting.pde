@@ -3,7 +3,10 @@
 
 
 
-ControlP5 Btn_UP, Btn_Dwn, Btn_10, Btn_1, Btn_01, Btn_Draw, Btn_CLS, Btn_Run, Btn_BOD, Btn_BackToCenter, Btn_TraceBD, Btn_Pause, Btn_Cancel;
+ControlP5 Btn_UP, Btn_Dwn, Btn_10, Btn_1, Btn_01;
+ControlP5 Btn_Draw, Btn_CLS, Btn_Run, Btn_BOD, Btn_BackToCenter, Btn_TraceBD, Btn_Pause, Btn_Cancel;
+ControlP5 Btn_Save, Btn_Load, Btn_GCODE;
+
 
 Toggle toggle_ShowBD, toggle_One;
 
@@ -27,11 +30,11 @@ void GUI_init() {
   ////////////////////////////////////
 
   toggle_One = INTERFACES.addToggle("Toggle_One") // OneStroke mode switch
-    .setPosition(width*0.8, height*.912)
+    .setPosition(width*0.83, height*.912)
     .setColorBackground(color(155, 155, 155))
     .setFont(font)
     .setValue(false)
-    .setSize((int)(width*0.1), (int)(height*.05)) 
+    .setSize((int)(width*0.1), (int)(height*.025)) 
     .setLabel("One_Stroke")
     .setMode(ControlP5.SWITCH)
     .hide(); 
@@ -43,7 +46,7 @@ void GUI_init() {
     .setColorActive(color(0, 255, 0))
     .setFont(font)
     .setValue(false)
-    .setSize((int)(width*0.1), (int)(height*.05)) 
+    .setSize((int)(width*0.1), (int)(height*.025)) 
     .setLabel("Show_BD")
     .setMode(ControlP5.SWITCH)
     .hide(); 
@@ -54,8 +57,8 @@ void GUI_init() {
   Btn_BackToCenter.addButton("ArmBackToCenter")
     .setFont(font)
     .setLabel("Prepare_for_Draw_Again") 
-    .setPosition(width*.2, height*.9)
-    .setSize(int(width*.3), int(height*.09))
+    .setPosition(width*.15, height*.9)
+    .setSize(int(width*.35), int(height*.09))
     .setColorBackground(color(0, 0, 250)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
@@ -140,7 +143,7 @@ void GUI_init() {
   Btn_Run.addButton("StartArmDraw")
     .setLabel("Arm_Draw") 
     .setFont(font)
-    .setPosition(width*.6, height*.9)
+    .setPosition(width*.55, height*.9)
     .setSize(int(width*.15), int(height*.09))
     .setColorBackground(color(100, 100, 250)) 
     .setColorCaptionLabel(color(255, 255, 0));
@@ -172,6 +175,37 @@ void GUI_init() {
     .setColorBackground(color(0, 0, 150)) 
     .setColorCaptionLabel(color(255, 255, 0));
 
+
+  Btn_Load = new ControlP5(this);
+  Btn_Load.addButton("fileLoad")
+    .setLabel("Load Image Data ") 
+    .setFont(font)
+    .setPosition(width*.20, height*.9)
+    .setSize(int(width*.25), int(height*.09))
+    .setColorBackground(color(0, 0, 150)) 
+    .setColorCaptionLabel(color(255, 255, 0));
+
+
+  Btn_Save = new ControlP5(this);
+  Btn_Save.addButton("fileSave")
+    .setFont(font)
+    .setLabel("Save") 
+    .setPosition(width*.7, height*.9)
+    .setSize(int(width*.12), int(height*.04))
+    .setColorBackground(color(0, 0, 150))
+    .setColorActive(color(100, 250, 250))
+    .setColorCaptionLabel(color(255, 255, 0));
+
+  Btn_GCODE = new ControlP5(this);
+  Btn_GCODE.addButton("SaveGCode")
+    .setFont(font)
+    .setLabel("Save_G") 
+    .setPosition(width*.7, height*.95)
+    .setSize(int(width*.12), int(height*.04))
+    .setColorBackground(color(0, 0, 150))
+    .setColorActive(color(100, 250, 250))
+    .setColorCaptionLabel(color(255, 255, 0));
+
   Btn_Run .hide();
   Btn_BOD.hide();
   Btn_BackToCenter.hide();
@@ -179,4 +213,12 @@ void GUI_init() {
   Btn_Cancel.hide();
   Btn_Pause.hide();
   Btn_CLS.hide();
+  Btn_GCODE.hide();
+
+  Btn_Save.hide();
+  Btn_UP.hide();
+  Btn_Dwn.hide();
+  Btn_10.hide();
+  Btn_1.hide();
+  Btn_01.hide();
 }
