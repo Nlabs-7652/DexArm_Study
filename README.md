@@ -34,6 +34,9 @@ DexArm study
 ![arm](https://user-images.githubusercontent.com/53891066/91298407-f3f49280-e7da-11ea-9e99-bf575e732066.JPG)
 ![dog](https://user-images.githubusercontent.com/53891066/91298419-f6ef8300-e7da-11ea-8462-c06707a256b6.JPG)
 
+*Update 1.4
+ Add File save and load as csv
+ Add GCODE export
 
 ### LICENCE
 This source code is provided under MIT license. Please feel free to copy, modify, re-distribute anyway you want.
