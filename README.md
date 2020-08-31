@@ -20,9 +20,9 @@ DexArm study
  
  ### Executable file
 
- MacOSX https://www.dropbox.com/s/uulcakiy349xmfm/OnStrokeDraw_1.2_OSX.zip?dl=0
+ MacOSX https://www.dropbox.com/s/ntv515h317ola5r/OneStrokeDraw_1.4.1_OSX.zip?dl=0
  
- Win64 https://www.dropbox.com/s/yj591g9jg1gq8e4/OneStrokeDraw_1.2_Win64.zip?dl=0
+ Win64 https://www.dropbox.com/s/iqitmb43jn3y1n4/OneStrokeDraw_1.4.1_Win64.zip?dl=0
 
  UnZip and Run!
  ( You may asked to install JAVA runtime)
@@ -31,12 +31,14 @@ DexArm study
 　After calibrating top of the Pen with arm to a paper, draw on screen.
 　Then the Arm will draw the same as the screen by one stroke or Normal draw.
  
+ *Update 1.4
+ Add File save and Load as csv
+ Add GCODE export
+
 ![arm](https://user-images.githubusercontent.com/53891066/91298407-f3f49280-e7da-11ea-9e99-bf575e732066.JPG)
 ![dog](https://user-images.githubusercontent.com/53891066/91298419-f6ef8300-e7da-11ea-8462-c06707a256b6.JPG)
 
-*Update 1.4
- Add File save and load as csv
- Add GCODE export
+
 
 ### LICENCE
 This source code is provided under MIT license. Please feel free to copy, modify, re-distribute anyway you want.
