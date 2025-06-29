@@ -170,8 +170,8 @@ void LoadCSV(File selection) {
     getFile = (String) selection.getAbsolutePath();
     // Check file extension
     String ext = getFile.substring(getFile.lastIndexOf('.') + 1);
-    //その文字列を小文字にする
-    ext.toLowerCase();
+    // convert extension to lower case for comparison
+    ext = ext.toLowerCase();
 
     if (ext.equals("csv")) {
       PointData.clear();
@@ -217,7 +217,7 @@ void SaveCSV(File selection) {
 
     // Check if overwrite csv
     String ext = getFile.substring(getFile.lastIndexOf('.') + 1);
-    ext.toLowerCase();
+    ext = ext.toLowerCase();
 
     String SaveFile = getFile;
     if (!ext.equals("csv")) { 
@@ -258,7 +258,7 @@ void GCODE(File selection) {
 
     // Check if overwrite csv
     String ext = getFile.substring(getFile.lastIndexOf('.') + 1);
-    ext.toLowerCase();
+    ext = ext.toLowerCase();
 
     String SaveFile = getFile;
     if (!ext.equals("gcode")) { 
