@@ -623,12 +623,13 @@ void ArmMove(float x, float y, float z, int f) {
 
 void serialEvent(Serial p) {
 
-  myString = p.readStringUntil(lf); 
+  myString = p.readStringUntil(lf);
 
-  if (mes != null) {
+  // process the message only when data is actually received
+  if (myString != null) {
     DecodeSerialEvent(myString);
   }
-} 
+}
 
 void DecodeSerialEvent(String mes) {
 
